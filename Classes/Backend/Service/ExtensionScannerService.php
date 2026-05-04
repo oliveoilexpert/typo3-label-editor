@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amdeu\LabelEditor\Backend\Service;
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
@@ -12,14 +13,19 @@ class ExtensionScannerService
 {
 	public function __construct(
 		private readonly PackageManager $packageManager,
-		private readonly ConfigurationService $configurationService
+		private readonly ConfigurationService $configurationService,
+		private readonly ExtensionConfiguration $extensionConfiguration
 	) {}
 
 	public function getAvailableExtensions(): array
 	{
 		$extensions = [];
-
+		$allowedExtensions = $this->extensionConfiguration
+			->get('label_editor', 'allowedExtensions') ?? '';
 		foreach ($this->packageManager->getAvailablePackages() as $package) {
+			if ($allowedExtensions && !GeneralUtility::inList($allowedExtensions, $package->getPackageKey())) {
+				continue;
+			}
 			$extensionKey = $package->getPackageKey();
 			$icon = $package->getPackageIcon();
 			$extensions[$extensionKey] = [

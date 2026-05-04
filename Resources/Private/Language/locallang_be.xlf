@@ -110,6 +110,9 @@
             <trans-unit id="js.search.noResults">
                 <source>No labels match your search</source>
             </trans-unit>
+            <trans-unit id="extconf.allowedExtensions.label">
+                <source>Allowed extensions (comma-separated list of extension keys to allow for label management, e.g. "myext,anotherext")</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

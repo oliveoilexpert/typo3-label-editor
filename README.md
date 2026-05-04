@@ -67,6 +67,12 @@ Use the search box above the table to filter labels by key or value in real-time
 2. Confirm the warning dialog
 3. **All custom label overrides for that extension will be deleted**
 
+### Configuration
+Extension Configuration in Backend:
+
+`System > Settings > Extension Configuration > label_editor`
+
+- `allowedExtensions`: **Restrict which extensions can be edited**. Comma-separated list of extension keys. If empty, all extensions are allowed.
 
 ## 💡 How It Works
 
