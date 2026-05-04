@@ -2,14 +2,14 @@
 
 $EM_CONF[$_EXTKEY] = [
 	'title' => 'Label Editor',
-	'description' => 'Allows managing translation overrides for locallang files directly from the backend',
+	'description' => 'Manage translation overrides for locallang files in a backend module',
 	'category' => 'be',
 	'author' => 'Amadeus Kiener',
 	'state' => 'stable',
-	'version' => '1.1.1',
+	'version' => '2.0.0',
 	'constraints' => [
 		'depends' => [
-			'typo3' => '13.4.0-13.99.99',
+			'typo3' => '14.3.0-14.3.99',
 		],
 		'conflicts' => [],
 	],

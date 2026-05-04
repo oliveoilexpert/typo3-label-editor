@@ -1,10 +1,10 @@
 {
   "name": "amdeu/typo3-label-editor",
   "type": "typo3-cms-extension",
-  "description": "Translation Label Editor",
+  "description": "Label Editor - Manage translation overrides for locallang files in a backend module",
   "license": "GPL-2.0-or-later",
   "require": {
-    "typo3/cms-core": "^13.4"
+    "typo3/cms-core": "^14.3"
   },
   "autoload": {
     "psr-4": {

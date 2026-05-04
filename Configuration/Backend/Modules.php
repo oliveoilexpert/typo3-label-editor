@@ -13,7 +13,7 @@ return [
 		'path' => '/module/web/label-editor',
 		'labels' => 'LLL:EXT:label_editor/Resources/Private/Language/locallang_mod.xlf',
 		'extensionName' => 'LabelEditor',
-		'iconIdentifier' => 'module-label-editor',
+		'iconIdentifier' => 'tx-label-editor-module',
 		'inheritNavigationComponentFromMainModule' => false,
 		'controllerActions' => [
 			LabelEditorController::class => [

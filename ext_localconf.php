@@ -6,18 +6,10 @@ defined('TYPO3') or die();
 
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use Amdeu\LabelEditor\Backend\Service;
 
-// Register icon
-$iconRegistry = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
-$iconRegistry->registerIcon(
-	'module-label-editor',
-	\TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
-	['source' => 'EXT:label_editor/Resources/Public/Icons/Extension.svg']
-);
 
-$configurationService = GeneralUtility::makeInstance(Service\ConfigurationService::class, GeneralUtility::makeInstance(Typo3Version::class));
+$configurationService = GeneralUtility::makeInstance(Service\ConfigurationService::class);
 
 // Load translation overrides from registry
 $registryFile = Environment::getVarPath() . '/label_editor/registry.json';

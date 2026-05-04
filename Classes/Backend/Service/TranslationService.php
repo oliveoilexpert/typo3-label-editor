@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Amdeu\LabelEditor\Backend\Service;
 
-use TYPO3\CMS\Core\Localization\Parser;
+use TYPO3\CMS\Core\Localization\Loader\XliffLoader;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TranslationService
 {
 	public function __construct(
-		private readonly Parser\XliffParser $xliffParser,
+		private readonly XliffLoader $xliffLoader,
 		private readonly SiteFinder $siteFinder,
 		private readonly ConfigurationService $configurationService
 	) {}
@@ -21,30 +21,30 @@ class TranslationService
 		// Parse original file
 		$originalPath = GeneralUtility::getFileAbsFileName($sourceFile);
 		$loader = $this->configurationService->getLoaderForFile($originalPath);
-		$original = $loader->getParsedData($originalPath, 'default');
+		$original = $loader->load($originalPath, 'default')->all()['messages'] ?? [];
 
 		$translations = [];
-		foreach ($original['default'] as $key => $data) {
+		foreach ($original as $key => $value) {
 			$translations[$key] = [
 				'key' => $key,
-				'source' => $data[0]['source'] ?? '',
+				'source' => $value,
 				'override' => '',
 			];
 		}
 
 		// Parse override if exists
 		if ($overridePath && file_exists($overridePath)) {
-			$override = $this->xliffParser->getParsedData($overridePath, 'default');
-			foreach ($override['default'] as $key => $data) {
+			$override = $this->xliffLoader->load($overridePath, 'default')->all()['messages'] ?? [];
+			foreach ($override as $key => $value) {
 				if (isset($translations[$key])) {
 					// Existing label - set override
-					$translations[$key]['override'] = $data[0]['target'] ?? $data[0]['source'] ?? '';
+					$translations[$key]['override'] = $value;
 				} else {
 					// New label added via override - add it to the list
 					$translations[$key] = [
 						'key' => $key,
-						'source' => $data[0]['source'] ?? '',
-						'override' => $data[0]['source'] ?? '',
+						'source' => '',
+						'override' => $value,
 						'isAdded' => true,
 					];
 				}
@@ -65,11 +65,11 @@ class TranslationService
 		$translations = [];
 
 		// Parse original file for keys
-		$original = $loader->getParsedData($originalPath, 'default');
-		foreach ($original['default'] as $key => $data) {
+		$original = $loader->load($originalPath, 'default')->all()['messages'] ?? [];
+		foreach ($original as $key => $value) {
 			$translations[$key] = [
 				'key' => $key,
-				'source' => $data[0]['source'] ?? '',
+				'source' => $value,
 				'translation' => '',
 				'override' => ''
 			];
@@ -77,28 +77,28 @@ class TranslationService
 
 		// Parse language file if exists
 		if ($langFilePath && file_exists($langFilePath)) {
-			$langData = $loader->getParsedData($langFilePath, $languageKey);
-			foreach ($langData[$languageKey] as $key => $data) {
+			$langData = $loader->load($langFilePath, $languageKey)->all()['messages'] ?? [];
+			foreach ($langData as $key => $value) {
 				if (isset($translations[$key])) {
-					$translations[$key]['translation'] = $data[0]['target'] ?? '';
+					$translations[$key]['translation'] = $value;
 				}
 			}
 		}
 
 		// Parse override if exists
 		if ($overridePath && file_exists($overridePath)) {
-			$override = $this->xliffParser->getParsedData($overridePath, $languageKey);
-			foreach ($override[$languageKey] as $key => $data) {
+			$override = $this->xliffLoader->load($overridePath, $languageKey)->all()['messages'] ?? [];
+			foreach ($override as $key => $value) {
 				if (isset($translations[$key])) {
 					// Existing label - set override
-					$translations[$key]['override'] = $data[0]['target'] ?? '';
+					$translations[$key]['override'] = $value;
 				} else {
 					// New label added via override - add it to the list
 					$translations[$key] = [
 						'key' => $key,
-						'source' => $data[0]['source'] ?? '',
+						'source' => '',
 						'translation' => '',
-						'override' => $data[0]['target'] ?? '',
+						'override' => $value,
 						'isAdded' => true,
 					];
 				}
